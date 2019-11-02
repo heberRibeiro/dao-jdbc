@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -13,9 +14,9 @@ import modelo.entidades.Departamento;
 import modelo.entidades.Vendedor;
 
 public class VendedorDaoJDBC implements VendedorDao {
-	
+
 	private Connection conn = null;
-	
+
 	public VendedorDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
@@ -23,52 +24,47 @@ public class VendedorDaoJDBC implements VendedorDao {
 	@Override
 	public void insert(Vendedor dep) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void update(Vendedor dep) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteById(Integer id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public Vendedor findById(Integer id) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		try {
 			st = conn.prepareStatement(
-					"SELECT seller.*,department.Name as DepName " +
-					"FROM seller INNER JOIN department " +
-					"ON seller.DepartmentId = department.Id " +
-					"WHERE seller.Id = ? ");
-		
+					"SELECT seller.*,department.Name as DepName " + "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id " + "WHERE seller.Id = ? ");
+
 			st.setInt(1, id);
 			rs = st.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				Departamento dep = instanciarDepartamento(rs);
-				
 				Vendedor vend = instanciarVendedor(rs, dep);
 				return vend;
 			}
 			return null;
-			
-			
+
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatment(st);
 			DB.closeResultSet(rs);
 		}
-		
-		
+
 	}
 
 	private Vendedor instanciarVendedor(ResultSet rs, Departamento dep) throws SQLException {
@@ -94,7 +90,36 @@ public class VendedorDaoJDBC implements VendedorDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
+	@Override
+	public List<Vendedor> findByDepartamento(Departamento departamento) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = conn.prepareStatement(
+					"SELECT seller.*,department.Name as DepName " + "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id " + "WHERE DepartmentId = ? " + "ORDER BY Name");
+
+			ps.setInt(1, departamento.getId());
+			rs = ps.executeQuery();
+
+			List<Vendedor> listaVendedores = new ArrayList<>();
+			Departamento dep = null;
+			while (rs.next()) {
+				if (dep == null) {
+					dep = instanciarDepartamento(rs);
+				}
+				Vendedor vend = instanciarVendedor(rs, dep);
+				listaVendedores.add(vend);
+			}
+			return listaVendedores;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatment(ps);
+			DB.closeResultSet(rs);
+		}
+	}
 
 }
