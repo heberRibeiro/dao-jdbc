@@ -20,7 +20,7 @@ public class DB {
 			try {
 				Properties prop = DB.loadProperties();
 				String dburl = prop.getProperty("dburl");
-				conn = DriverManager.getConnection(dburl);
+				conn = DriverManager.getConnection(dburl, prop);
 			} catch (SQLException e) {
 				throw new DbException(e.getMessage());
 			}

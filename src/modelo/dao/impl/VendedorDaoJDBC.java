@@ -1,6 +1,7 @@
 package modelo.dao.impl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -39,7 +40,7 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public Vendedor findById(Integer id) {
-		java.sql.PreparedStatement st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
 		
 		try {
@@ -48,21 +49,13 @@ public class VendedorDaoJDBC implements VendedorDao {
 					"FROM seller INNER JOIN department " +
 					"ON seller.DepartmentId = department.Id " +
 					"WHERE seller.Id = ? ");
-			
+		
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			if(rs.next()) {
-				Departamento dep = new Departamento();
-				dep.setId(rs.getInt("DepartmentId"));
-				dep.setNome(rs.getString("DepString"));
+				Departamento dep = instanciarDepartamento(rs);
 				
-				Vendedor vend = new Vendedor();
-				vend.setId(rs.getInt("Id"));
-				vend.setNome(rs.getString("Name"));
-				vend.setEmail(rs.getString("Email"));
-				vend.setSalarioBase(rs.getDouble("BaseSalary"));
-				vend.setDataAniversario(rs.getDate("BirthDate"));
-				vend.setDepartamento(dep);
+				Vendedor vend = instanciarVendedor(rs, dep);
 				return vend;
 			}
 			return null;
@@ -76,6 +69,24 @@ public class VendedorDaoJDBC implements VendedorDao {
 		}
 		
 		
+	}
+
+	private Vendedor instanciarVendedor(ResultSet rs, Departamento dep) throws SQLException {
+		Vendedor vend = new Vendedor();
+		vend.setId(rs.getInt("Id"));
+		vend.setNome(rs.getString("Name"));
+		vend.setEmail(rs.getString("Email"));
+		vend.setSalarioBase(rs.getDouble("BaseSalary"));
+		vend.setDataAniversario(rs.getDate("BirthDate"));
+		vend.setDepartamento(dep);
+		return vend;
+	}
+
+	private Departamento instanciarDepartamento(ResultSet rs) throws SQLException {
+		Departamento dep = new Departamento();
+		dep.setId(rs.getInt("DepartmentId"));
+		dep.setNome(rs.getString("DepName"));
+		return dep;
 	}
 
 	@Override
