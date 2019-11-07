@@ -41,6 +41,11 @@ public class Programa {
 		vendedor.setNome("Martha Waine");
 		vendedorDao.update(vendedor);
 		System.out.println("Update realizado!");
+		
+		System.out.println("\n=== TESTE 6: Vendedor delete ===");
+		int id = 9;
+		vendedorDao.deleteById(id);
+		System.out.println("Delete realizado!");
 
 	}
 
