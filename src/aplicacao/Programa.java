@@ -35,6 +35,12 @@ public class Programa {
 		Vendedor novoVendedor = new Vendedor(null, "Greg", "greg@gmail.com", new Date(), 4000.0, dep);
 		vendedorDao.insert(novoVendedor);
 		System.out.println("Inserido! Id: " + novoVendedor.getId());
+		
+		System.out.println("\n=== TESTE 5: Vendedor update ===");
+		vendedor = vendedorDao.findById(1);
+		vendedor.setNome("Martha Waine");
+		vendedorDao.update(vendedor);
+		System.out.println("Update realizado!");
 
 	}
 
