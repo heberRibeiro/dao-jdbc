@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -105,10 +107,14 @@ public class VendedorDaoJDBC implements VendedorDao {
 			rs = ps.executeQuery();
 
 			List<Vendedor> listaVendedores = new ArrayList<>();
-			Departamento dep = null;
+			Map<Integer, Departamento> map = new HashMap<>();
 			while (rs.next()) {
+				
+				Departamento dep = map.get(rs.getInt("DepartmentId"));
+				
 				if (dep == null) {
 					dep = instanciarDepartamento(rs);
+					map.put(rs.getInt("DepartmentId"), dep);
 				}
 				Vendedor vend = instanciarVendedor(rs, dep);
 				listaVendedores.add(vend);
