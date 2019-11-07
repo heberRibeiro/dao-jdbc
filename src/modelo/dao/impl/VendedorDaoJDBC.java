@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mysql.jdbc.Statement;
+
 import db.DB;
 import db.DbException;
 import modelo.dao.VendedorDao;
@@ -24,8 +26,36 @@ public class VendedorDaoJDBC implements VendedorDao {
 	}
 
 	@Override
-	public void insert(Vendedor dep) {
-		// TODO Auto-generated method stub
+	public void insert(Vendedor vend) {
+		PreparedStatement ps = null;
+		try {
+			ps = conn.prepareStatement("INSERT INTO seller " + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+ "VALUES " + "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+			ps.setString(1, vend.getNome());
+			ps.setString(2, vend.getEmail());
+			ps.setDate(3, new java.sql.Date(vend.getDataAniversario().getTime()));
+			ps.setDouble(4, vend.getSalarioBase());
+			ps.setInt(5, vend.getDepartamento().getId());
+
+			int nLinhasAlteradas = ps.executeUpdate();
+
+			if (nLinhasAlteradas > 0) {
+				ResultSet rs = ps.getGeneratedKeys();
+				if (rs.next()) {
+					int id = rs.getInt(1);
+					vend.setId(id);
+				}
+				DB.closeResultSet(rs);
+			} else {
+				throw new DbException("Erro inesperado. Nenhuma alteração realizada!");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatment(ps);
+		}
 
 	}
 
@@ -102,9 +132,9 @@ public class VendedorDaoJDBC implements VendedorDao {
 			List<Vendedor> listaVendedores = new ArrayList<>();
 			Map<Integer, Departamento> map = new HashMap<>();
 			while (rs.next()) {
-				
+
 				Departamento dep = map.get(rs.getInt("DepartmentId"));
-				
+
 				if (dep == null) {
 					dep = instanciarDepartamento(rs);
 					map.put(rs.getInt("DepartmentId"), dep);
@@ -138,9 +168,9 @@ public class VendedorDaoJDBC implements VendedorDao {
 			List<Vendedor> listaVendedores = new ArrayList<>();
 			Map<Integer, Departamento> map = new HashMap<>();
 			while (rs.next()) {
-				
+
 				Departamento dep = map.get(rs.getInt("DepartmentId"));
-				
+
 				if (dep == null) {
 					dep = instanciarDepartamento(rs);
 					map.put(rs.getInt("DepartmentId"), dep);
