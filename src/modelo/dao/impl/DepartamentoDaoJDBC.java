@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -41,7 +42,7 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 	public Departamento findById(Integer id) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		
+
 		try {
 			ps = conn.prepareStatement("SELECT department.* " + "FROM department " + "WHERE Id = ?");
 
@@ -71,8 +72,25 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 
 	@Override
 	public List<Departamento> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = conn.prepareStatement("SELECT * FROM department " + "ORDER BY Id");
+			rs = ps.executeQuery();
+			List<Departamento> departamentos = new ArrayList<>();
+			while (rs.next()) {
+				Departamento dep = instanciarDepartamento(rs);
+				departamentos.add(dep);
+			}
+			return departamentos;
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatment(ps);
+			DB.closeResultSet(rs);
+		}
+
 	}
 
 }

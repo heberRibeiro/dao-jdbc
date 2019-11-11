@@ -1,6 +1,5 @@
 package aplicacao;
 
-import java.util.Date;
 import java.util.List;
 
 import modelo.dao.DepartamentoDao;
@@ -47,12 +46,19 @@ public class Programa {
 //		int id = 9;
 //		vendedorDao.deleteById(id);
 //		System.out.println("Delete realizado!");
-		
+
 		DepartamentoDao departamentoDao = FabricaDao.criarDepartamentoDao();
+
 		System.out.println("\n==== TESTE 7: Departamento findById ===");
 		Departamento departamento = departamentoDao.findById(2);
 		System.out.println(departamento);
-		
+
+		System.out.println("\n=== TESTE 8: Departamento findAll ===");
+		List<Departamento> departamentoFindAll = departamentoDao.findAll();
+		for (Departamento depart : departamentoFindAll) {
+			System.out.println(depart);
+
+		}
 
 	}
 
