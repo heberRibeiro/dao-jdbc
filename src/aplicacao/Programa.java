@@ -57,8 +57,12 @@ public class Programa {
 		List<Departamento> departamentoFindAll = departamentoDao.findAll();
 		for (Departamento depart : departamentoFindAll) {
 			System.out.println(depart);
-
 		}
+		
+		System.out.println("\n=== TESTE 9: Departamento insert ===");
+		Departamento novoDep = new Departamento(null, "D2");
+		departamentoDao.insert(novoDep);
+		System.out.println("Inserido! Id: " + novoDep.getId());
 
 	}
 
