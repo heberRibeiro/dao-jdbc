@@ -62,13 +62,27 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatment(ps);
 		}
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
 
+		try {
+			ps = conn.prepareStatement("DELETE FROM department WHERE Id = ?");
+
+			ps.setInt(1, id);
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatment(ps);
+		}
 	}
 
 	@Override

@@ -64,10 +64,14 @@ public class Programa {
 //		departamentoDao.insert(novoDep);
 //		System.out.println("Inserido! Id: " + novoDep.getId());
 
-		System.out.println("\n=== TESTE 10: Departamento update ===");
-		Departamento novoDep = new Departamento(23, "Dep23");
-		departamentoDao.update(novoDep);
-		System.out.println("Atualizado! Id: " + novoDep.getId() + ", Nome: " + novoDep.getNome());
+//		System.out.println("\n=== TESTE 10: Departamento update ===");
+//		Departamento novoDep = new Departamento(23, "Dep23");
+//		departamentoDao.update(novoDep);
+//		System.out.println("Atualizado! Id: " + novoDep.getId() + ", Nome: " + novoDep.getNome());
+
+		System.out.println("\n=== TESTE 11: Departamento delete ===");
+		departamentoDao.deleteById(22);
+		System.out.println("Excluído!");
 	}
 
 }
