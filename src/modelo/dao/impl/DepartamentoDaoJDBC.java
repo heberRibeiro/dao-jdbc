@@ -25,7 +25,6 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 	@Override
 	public void insert(Departamento dep) {
 		PreparedStatement ps = null;
-		// ResultSet rs = null;
 		try {
 			ps = conn.prepareStatement("INSERT INTO department " + "(Name) " + "VALUES " + "(?)",
 					Statement.RETURN_GENERATED_KEYS);
@@ -47,13 +46,23 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 		} finally {
 			DB.closeStatment(ps);
 		}
-
 	}
 
 	@Override
 	public void update(Departamento dep) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
 
+		try {
+			ps = conn.prepareStatement("UPDATE department " + "SET Name = ? " + "WHERE Id = ?");
+
+			ps.setString(1, dep.getNome());
+			ps.setInt(2, dep.getId());
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 	}
 
 	@Override

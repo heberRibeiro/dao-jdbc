@@ -58,12 +58,16 @@ public class Programa {
 		for (Departamento depart : departamentoFindAll) {
 			System.out.println(depart);
 		}
-		
-		System.out.println("\n=== TESTE 9: Departamento insert ===");
-		Departamento novoDep = new Departamento(null, "D2");
-		departamentoDao.insert(novoDep);
-		System.out.println("Inserido! Id: " + novoDep.getId());
 
+//		System.out.println("\n=== TESTE 9: Departamento insert ===");
+//		Departamento novoDep = new Departamento(null, "D2");
+//		departamentoDao.insert(novoDep);
+//		System.out.println("Inserido! Id: " + novoDep.getId());
+
+		System.out.println("\n=== TESTE 10: Departamento update ===");
+		Departamento novoDep = new Departamento(23, "Dep23");
+		departamentoDao.update(novoDep);
+		System.out.println("Atualizado! Id: " + novoDep.getId() + ", Nome: " + novoDep.getNome());
 	}
 
 }
